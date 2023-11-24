@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import './style.css'
+import './index.scss'
 import { Input } from 'antd'
 
 function IndexPopup() {
