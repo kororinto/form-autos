@@ -6,7 +6,6 @@ export default {
   tabWidth: 2,
   useTabs: false,
   semi: false,
-  singleQuote: false,
   trailingComma: "none",
   bracketSpacing: true,
   bracketSameLine: true,
@@ -22,5 +21,6 @@ export default {
     "^~(.*)$",
     "",
     "^[./]"
-  ]
+  ],
+  singleQuote: true
 }

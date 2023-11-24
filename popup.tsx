@@ -1,24 +1,22 @@
-import { useState } from "react"
+import { useState } from 'react'
+
+import './style.css'
+import { Input } from 'antd'
 
 function IndexPopup() {
-  const [data, setData] = useState("")
+  const [data, setData] = useState('')
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        padding: 16
-      }}>
-      <h2>
+    <div className="flex flex-col p-[16px] w-[300px]">
+      <div className="whitespace-nowrap">
         Welcome to your
         <a href="https://www.plasmo.com" target="_blank">
-          {" "}
+          {' '}
           Plasmo
-        </a>{" "}
+        </a>{' '}
         Extension!
-      </h2>
-      <input onChange={(e) => setData(e.target.value)} value={data} />
+      </div>
+      <Input onChange={(e) => setData(e.target.value)} value={data} />
       <a href="https://docs.plasmo.com" target="_blank">
         View Docs
       </a>
