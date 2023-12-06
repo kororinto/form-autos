@@ -1,27 +1,32 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import './index.scss'
-import { Input } from 'antd'
 
-function IndexPopup() {
-  const [data, setData] = useState('')
+import { Button, Input } from 'antd'
+
+const Popup = () => {
+  const [data, setData] = useState('click')
+
+  const iframeRef = useRef<HTMLIFrameElement>(null)
+
+  useEffect(() => {
+    window.addEventListener('message', (event) => {
+      console.log('EVAL output: ' + event.data)
+    })
+  }, [])
 
   return (
     <div className="flex flex-col p-[16px] w-[300px]">
-      <div className="whitespace-nowrap">
-        Welcome to your
-        <a href="https://www.plasmo.com" target="_blank">
-          {' '}
-          Plasmo
-        </a>{' '}
-        Extension!
-      </div>
-      <Input onChange={(e) => setData(e.target.value)} value={data} />
-      <a href="https://docs.plasmo.com" target="_blank">
-        View Docs
-      </a>
+      <Button
+        onClick={() => {
+          iframeRef.current.contentWindow.postMessage('10 + 20', '*')
+          setData(data === 'click' ? 'clicked' : 'click')
+        }}>
+        {data}
+      </Button>
+      <iframe src="sandboxes/test.html " ref={iframeRef} style={{ display: "none" }} />
     </div>
   )
 }
 
-export default IndexPopup
+export default Popup
