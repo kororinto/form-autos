@@ -1,6 +1,6 @@
 import './index.scss'
 
-function Tabs() {
+function Sidepanel() {
   return (
     <div
       style={{
@@ -13,4 +13,4 @@ function Tabs() {
   )
 }
 
-export default Tabs
+export default Sidepanel

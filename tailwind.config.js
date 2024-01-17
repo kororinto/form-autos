@@ -6,27 +6,7 @@ module.exports = {
   plugins: [],
   theme: {
     boxShadow: {
-      'home-notice': '0 10px 10px 0 rgb(97 110 251 / 6%)',
-      'home-side-card': '0px 10px 10px 0px rgba(97,110,251,0.06)',
-      'recommend-card': '0 10px 10px 0 rgba(54,95,255,0.06)',
-      'live-calendar-card': '0px 10px 10px 0px rgba(97,161,251,0.06)',
-      questionnaire: '0px 10px 10px 0px rgba(54,95,255,0.06)',
-      'order-good': 'inset 0px 4px 4px 0px rgba(255,255,255,0.1)',
-      'examination-question': '0 4px 4px rgba(255, 255, 255, 0.1) inset',
-      'examination-question-buttons': '0 -2px 7px rgba(111, 111, 127, 0.1)',
-      'examination-question-right-top':
-        '0 4px 4px rgba(255, 255, 255, 0.1) inset',
-      'invoice-info': 'inset 0px 4px 4px 0px rgba(255, 255, 255, 0.1)',
-      'login-modal': 'inset 0px 4px 4px 0px rgba(255,255,255,0.1)',
-      'identity-info-window':
-        '2px 8px 8px rgba(97, 110, 251, 0.08), -2px -5px 5px rgba(255, 255, 255, 0.25), 0 4px 4px rgba(255, 255, 255, 0.1) inset',
-      'password-setting-window': '2px 8px 8px 0px rgba(97, 110, 251, 0.08)',
-      'map-card': '2px 0px 12px 0px rgba(0,46,110,0.08)',
-      'map-card-right-arrow': '2px 0px 4px 0px rgba(0,68,207,0.16)',
-      'map-card-left-arrow': '-2px 0px 4px 0px rgba(0,68,207,0.16)',
-      'map-card-detail': '-2px 0px 12px 0px rgba(0,46,110,0.08)',
-      'auth-login-card': '0px 10px 20px 0px rgba(0,0,0,0.04)',
-      'group-purchase-card': '0px 10px 20px 0px rgba(0,107,253,0.08)'
+      left: '0 10px 30px rgba(0, 0, 0, .2)'
     },
     colors: {
       blank: '#FFFFFF',

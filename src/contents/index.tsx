@@ -1,11 +1,11 @@
 import { StyleProvider } from '@ant-design/cssinjs'
 // import './index.scss'
 
-import { Button, ConfigProvider } from 'antd'
+import { Button, ConfigProvider, Form, Input, List } from 'antd'
 import zhCN from 'antd/es/locale/zh_CN'
 import cssText from 'data-text:~contents/index.scss'
 import type { PlasmoCSConfig, PlasmoCSUIProps } from 'plasmo'
-import { useCallback, useRef, type FC } from 'react'
+import { useCallback, useMemo, useRef, useState, type FC } from 'react'
 
 import { getClosestText } from './utils'
 
@@ -50,9 +50,30 @@ const clearActiveStyle = (el: HTMLElement) => {
 }
 
 const MyPopup: FC<PlasmoCSUIProps> = ({ anchor }) => {
-  // const [pageInputs, setPageInputs] = useState<HTMLInputElement[]>();
-  const pageInputs = useRef<HTMLInputElement[]>([])
+  const presets = localStorage.getItem('form-autos-presets')
+    ? JSON.parse(localStorage.getItem('form-autos-presets'))
+    : []
+
+  const [pageInputs, setPageInputs] = useState<HTMLInputElement[]>([])
   const activeEl = useRef<HTMLElement>()
+  const [presetVisible, setPresetVisible] = useState(false)
+
+  const [form] = Form.useForm()
+
+  // 文本输入框
+  const textInputs = useMemo(
+    () =>
+      pageInputs?.filter((input) => {
+        const inputComputedStyle = getComputedStyle(input)
+        return (
+          input.type === 'text' &&
+          inputComputedStyle.display !== 'none' &&
+          inputComputedStyle.visibility !== 'hidden' &&
+          inputComputedStyle.opacity !== '0'
+        )
+      }) || [],
+    [pageInputs]
+  )
 
   const mouseoverElementHandler = useCallback((e: MouseEvent) => {
     const el = e.target as HTMLElement
@@ -69,7 +90,12 @@ const MyPopup: FC<PlasmoCSUIProps> = ({ anchor }) => {
     removeListener()
     const el = e.target as HTMLElement
     const inputs = Array.from(el.querySelectorAll('input'))
-    pageInputs.current = inputs
+    inputs.forEach((input) => {
+      console.log(input)
+
+      input.setAttribute('form-autos-label', getClosestText(input))
+    })
+    setPageInputs(inputs)
   }, [])
 
   const removeListener = useCallback(() => {
@@ -83,31 +109,7 @@ const MyPopup: FC<PlasmoCSUIProps> = ({ anchor }) => {
     document.addEventListener('mouseover', mouseoverElementHandler)
   }
 
-  const fillInputs = () => {
-    const textInputs = pageInputs.current.filter(
-      (input) => input.type === 'text'
-    )
-
-    const displayTextInputs = textInputs.filter((input) => {
-      const inputComputedStyle = getComputedStyle(input)
-      return (
-        inputComputedStyle.display !== 'none' &&
-        inputComputedStyle.visibility !== 'hidden' &&
-        inputComputedStyle.opacity !== '0'
-      )
-    })
-
-    displayTextInputs.forEach((input) => {
-      console.log(input)
-      // 分发事件 模拟用户输入
-      // input.dispatchEvent(focusEvent)
-      // input.dispatchEvent(inputEvent)
-      // input.dispatchEvent(changeEvent)
-      // input.dispatchEvent(blurEvent)
-
-      console.log(getClosestText(input))
-    })
-  }
+  const fillInputs = useCallback(() => {}, [textInputs])
 
   return (
     <ConfigProvider
@@ -130,13 +132,64 @@ const MyPopup: FC<PlasmoCSUIProps> = ({ anchor }) => {
       <StyleProvider
         hashPriority="high"
         container={document.querySelector('plasmo-csui').shadowRoot}>
-        <div className="fixed right-0 top-0 bg-[pink] text-[14px]">
-          <Button type="primary" onClick={getInputs}>
-            获取表单
-          </Button>
-          <Button type="primary" onClick={fillInputs}>
-            填入表单
-          </Button>
+        <div className="fixed right-0 top-0 bg-blank text-[14px] h-[100vh] shadow-left rounded-l-[8px] min-w-[500px] max-w-[800px] flex">
+          <div>
+            {/* header */}
+            <div className="flex justify-center p-[16px] gap-x-[16px] border-b border-gray-4">
+              <Button type="primary" onClick={getInputs}>
+                获取表单
+              </Button>
+              <Button
+                type="primary"
+                onClick={() => setPresetVisible(!presetVisible)}>
+                预设
+              </Button>
+            </div>
+            {/* content */}
+            <div className="p-[16px] flex flex-col gap-y-[12px]">
+              <Form form={form} labelCol={{ span: 8 }} className="!pr-[100px]">
+                {textInputs.map((item, index) => (
+                  <Form.Item
+                    name={item.id}
+                    label={item.getAttribute('form-autos-label')}
+                    key={index}>
+                    <Input
+                      onChange={(e) => {
+                        item.value = e.target.value
+                        // 分发事件 模拟用户输入
+                        item.dispatchEvent(focusEvent)
+                        item.dispatchEvent(inputEvent)
+                        item.dispatchEvent(changeEvent)
+                        item.dispatchEvent(blurEvent)
+                      }}
+                    />
+                  </Form.Item>
+                ))}
+                <Form.Item>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    onClick={() => {
+                      presets.push(JSON.stringify(form.getFieldsValue()))
+                      localStorage.setItem('form-autos-presets', presets)
+                    }}>
+                    存为预设
+                  </Button>
+                </Form.Item>
+              </Form>
+            </div>
+          </div>
+          {presetVisible && (
+            <div className="w-[200px] flex-shrink-0 flex-grow-0 h-full border-r border-gray-4">
+              <List>
+                {presets.map((preset, index) => (
+                  <List.Item key={index}>
+                    {preset}
+                  </List.Item>
+                ))}
+              </List>
+            </div>
+          )}
         </div>
       </StyleProvider>
     </ConfigProvider>
